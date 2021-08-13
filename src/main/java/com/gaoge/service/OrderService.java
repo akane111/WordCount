@@ -17,4 +17,6 @@ public interface OrderService {
     void update(Order order, Integer id);
 
     void delete(Integer id);
+
+    List<Order> selectByType(String type);
 }

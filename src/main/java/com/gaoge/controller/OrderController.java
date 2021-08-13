@@ -30,7 +30,7 @@ public class OrderController {
         return new Result<List<Order>>(true, StatusCode.OK, "查询成功", orders);
     }
 
-    //查询所有货源(商品)订单
+    //查询所有商品（货源)订单
     @ApiOperation(value = "分页查询所有货源(商品)订单")
     @GetMapping("/goods/{pageNum}")
     public Result<PageInfo> selectAllGoods(@PathVariable("pageNum") Integer pageNum) {
@@ -70,11 +70,26 @@ public class OrderController {
         orderService.delete(id);
         return new Result(true, StatusCode.OK, "删除订单");
     }
+
     //根据用户名+类型查询订单
-//    @ApiOperation(value = "根据用户名+订单类型查询订单")
-//    @GetMapping("/search/{type}")
-//    public Result<List> selectByType(@PathVariable("type") String type){
-//        orderService.selectByType(String type);
-//
-//    }
+    @ApiOperation(value = "根据用户名+订单类型查询订单")
+    @GetMapping("/search/{type}")
+    public Result<List<Order>> selectByType(@PathVariable("type") String type) {
+        List<Order> orders = orderService.selectByType(type);
+        return new Result<List<Order>>(true, StatusCode.OK, "查询成功", orders);
+    }
+
+    //分页多条件搜索商品（货源）订单  不写了
+    @ApiOperation(value = "分页多条件搜索商品（货源）订单  没写")
+    @GetMapping("/search/goods/Example")
+    public Result searchGooodsByExample(){
+        return new Result(true,StatusCode.OK,"没写           ");
+    }
+    //分页多条件搜索需求订单  不写了
+    @ApiOperation(value = "分页多条件搜索需求订单            没写")
+    @GetMapping("/search/noods/Example")
+    public Result searchNooodsByExample(){
+        return new Result(true,StatusCode.OK,"没写");
+    }
+
 }

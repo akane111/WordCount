@@ -70,6 +70,20 @@ public class OrderServiceImpl implements OrderService {
         orderDao.deleteByPrimaryKey(id);
     }
 
+    @Override
+    public List<Order> selectByType(String type) {
+        String name="gaoge";
+        Order order = new Order();
+//        order.setOwnName(name);
+//        order.setType(type);
+        Example example = new Example(Order.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("type",type);
+        criteria.andEqualTo("ownName",name);
+        List<Order> orders = orderDao.selectByExample(example);
+        return orders;
+    }
+
     //创建example
     public Example createExample(Order order) {
         Example example = new Example(Order.class);
