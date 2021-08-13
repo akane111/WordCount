@@ -70,4 +70,11 @@ public class OrderController {
         orderService.delete(id);
         return new Result(true, StatusCode.OK, "删除订单");
     }
+    //根据用户名+类型查询订单
+//    @ApiOperation(value = "根据用户名+订单类型查询订单")
+//    @GetMapping("/search/{type}")
+//    public Result<List> selectByType(@PathVariable("type") String type){
+//        orderService.selectByType(String type);
+//
+//    }
 }

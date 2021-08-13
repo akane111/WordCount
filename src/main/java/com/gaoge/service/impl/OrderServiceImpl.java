@@ -18,7 +18,7 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
 
     //每页显示多条数据
-    private static final Integer pageSize = 3;
+    private static final Integer pageSize = 6;
 
     @Autowired
     private OrderDao orderDao;
