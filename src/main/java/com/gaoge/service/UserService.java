@@ -1,6 +1,7 @@
 package com.gaoge.service;
 
 import com.gaoge.entity.User;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
@@ -14,4 +15,8 @@ public interface UserService {
     void delete(String userName);
 
     void selectByUserName(String userName);
+
+    PageInfo<User> findPage(Integer pageNum, Integer pageSize);
+
+    PageInfo<User> findPage(User user, Integer pageNum, Integer pageSize);
 }

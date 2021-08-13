@@ -4,6 +4,8 @@ import com.gaoge.common.Result;
 import com.gaoge.common.StatusCode;
 import com.gaoge.entity.User;
 import com.gaoge.service.UserService;
+
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.ibatis.annotations.Param;
@@ -34,28 +36,30 @@ public class UserController {
     //增加用户
     @ApiOperation(value = "增加用户")
     @PostMapping
-    public Result add(@RequestParam(value = "file", required = false) MultipartFile file,
-                      User user
+    public Result add(//@RequestParam(value = "file", required = false) MultipartFile file,
+                      @RequestBody User user
     ) throws IOException {
-        String originalFilename = file.getOriginalFilename();
-        String tail = originalFilename.substring(originalFilename.lastIndexOf("."));
-        String picName = UUID.randomUUID().toString().replaceAll("-", "") + tail;
-        //图片路径
-        String picPath = "e:" + File.separator + "files";
-        File filePath = new File(picPath);
-        if (!filePath.exists()) {
-            filePath.mkdirs();
-        }
-        //目标文件位置
-        String fileLocation = picPath + File.separator + picName;
-        //设置头像路径
-        user.setAvatar(fileLocation);
-        File targetFile = new File(fileLocation);
-        if (!targetFile.exists()) {
-            targetFile.createNewFile();
-        }
-        //将文件复制到新指定文件名字
-        file.transferTo(targetFile);
+//        if (file!=null){
+//            String originalFilename = file.getOriginalFilename();
+//            String tail = originalFilename.substring(originalFilename.lastIndexOf("."));
+//            String picName = UUID.randomUUID().toString().replaceAll("-", "") + tail;
+//            //图片路径
+//            String picPath = "e:" + File.separator + "files";
+//            File filePath = new File(picPath);
+//            if (!filePath.exists()) {
+//                filePath.mkdirs();
+//            }
+//            //目标文件位置
+//            String fileLocation = picPath + File.separator + picName;
+//            //设置头像路径
+//            user.setAvatar(fileLocation);
+//            File targetFile = new File(fileLocation);
+//            if (!targetFile.exists()) {
+//                targetFile.createNewFile();
+//            }
+//            //将文件复制到新指定文件名字
+//            file.transferTo(targetFile);
+//        }
         userService.add(user);
         return new Result(true, StatusCode.OK, "添加成功");
     }
@@ -85,14 +89,21 @@ public class UserController {
         return new Result(true, StatusCode.OK, "查询成功");
     }
 
-//    //分页查询所有用户
-//    @ApiOperation("分页查询所有用户")
-//    @GetMapping("/search/{pageNum}/{pageSize}")
-//    public Result<List<User>> findPage(@PathVariable("pageNum")Integer pageNum,
-//                                       @PathVariable("pageSize")Integer pageSize){
-//        userService.findPage(pageNum,pageSize);
-//
-//    }
-
-
+    //分页查询所有用户
+    @ApiOperation("分页查询所有用户")
+    @GetMapping("/search/{pageNum}/{pageSize}")
+    public Result<PageInfo> findPage(@PathVariable("pageNum") Integer pageNum,
+                                     @PathVariable("pageSize") Integer pageSize) {
+        PageInfo<User> pageInfo = userService.findPage(pageNum, pageSize);
+        return new Result<PageInfo>(true, StatusCode.OK, "分页查询成功", pageInfo);
+    }
+    //分页条件查询
+    @ApiOperation("分页条件查询用户")
+    @PostMapping("/search/{pageNum}/{pageSize}")
+    public Result<PageInfo> findPage(@RequestBody User user,
+                                     @PathVariable("pageNum") Integer pageNum,
+                                     @PathVariable("pageSize") Integer pageSize) {
+        PageInfo<User> pageInfo = userService.findPage(user, pageNum, pageSize);
+        return new Result<PageInfo>(true,StatusCode.OK,"查询成功",pageInfo);
+    }
 }

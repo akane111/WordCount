@@ -43,9 +43,15 @@
         </dependency>
         <dependency>
             <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper</artifactId>
-            <version>5.1.2</version>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>1.3.1</version>
         </dependency>
+<!--        这个有问题得用springboot-->
+<!--        <dependency>-->
+<!--            <groupId>com.github.pagehelper</groupId>-->
+<!--            <artifactId>pagehelper</artifactId>-->
+<!--            <version>5.1.2</version>-->
+<!--        </dependency>-->
 
     </dependencies>
 
