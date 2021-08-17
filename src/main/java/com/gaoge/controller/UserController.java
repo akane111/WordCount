@@ -85,7 +85,7 @@ public class UserController {
     @ApiOperation(value = "根据用户名查询用户")
     @GetMapping("/{userName}")
     public Result selectByUserName(@PathVariable("userName") String userName) {
-        userService.selectByUserName(userName);
+        User user = userService.selectByUserName(userName);
         return new Result(true, StatusCode.OK, "查询成功");
     }
 

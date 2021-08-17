@@ -6,10 +6,13 @@ import com.gaoge.service.UserService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
@@ -17,6 +20,8 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;
+    @Resource
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public List<User> selectAll() {
@@ -25,6 +30,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void add(User user) {
+        String password = user.getPassword();
+        String encodePassword = passwordEncoder.encode(password);
+        user.setPassword(encodePassword);
         user.setCreateTime(new Date());
         user.setUpdateTime(new Date());
         userDao.insertSelective(user);
@@ -41,8 +49,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void selectByUserName(String userName) {
-        userDao.selectByPrimaryKey(userName);
+    public User selectByUserName(String userName) {
+        User user = userDao.selectByPrimaryKey(userName);
+        return user;
     }
 
     @Override

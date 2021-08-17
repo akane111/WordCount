@@ -14,7 +14,7 @@ public interface UserService {
 
     void delete(String userName);
 
-    void selectByUserName(String userName);
+    User selectByUserName(String userName);
 
     PageInfo<User> findPage(Integer pageNum, Integer pageSize);
 

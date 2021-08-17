@@ -84,6 +84,12 @@ public class OrderServiceImpl implements OrderService {
         return orders;
     }
 
+    @Override
+    public Order selectById(Integer id) {
+        Order order = orderDao.selectByPrimaryKey(id);
+        return order;
+    }
+
     //创建example
     public Example createExample(Order order) {
         Example example = new Example(Order.class);

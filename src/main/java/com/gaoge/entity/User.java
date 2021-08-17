@@ -25,7 +25,7 @@ public class User {
     private String phone;
     private String identityNum;
     private String address;
-    private int role;
+    private String role;
     private Date createTime;
     private Date updateTime;
     private int integral;

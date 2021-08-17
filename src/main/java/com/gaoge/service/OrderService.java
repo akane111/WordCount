@@ -19,4 +19,6 @@ public interface OrderService {
     void delete(Integer id);
 
     List<Order> selectByType(String type);
+
+    Order selectById(Integer id);
 }

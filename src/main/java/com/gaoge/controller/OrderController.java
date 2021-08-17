@@ -79,17 +79,27 @@ public class OrderController {
         return new Result<List<Order>>(true, StatusCode.OK, "查询成功", orders);
     }
 
+    //根据id查询订单
+    @ApiOperation(value = "根据id查询订单")
+    @GetMapping("/{id}")
+    public Result<Order> selectById(@PathVariable("id") Integer id) {
+        Order order = orderService.selectById(id);
+        return new Result<Order>(true,StatusCode.OK,"查询成功",order);
+
+    }
+
     //分页多条件搜索商品（货源）订单  不写了
     @ApiOperation(value = "分页多条件搜索商品（货源）订单  没写")
     @GetMapping("/search/goods/Example")
-    public Result searchGooodsByExample(){
-        return new Result(true,StatusCode.OK,"没写           ");
+    public Result searchGooodsByExample() {
+        return new Result(true, StatusCode.OK, "没写           ");
     }
+
     //分页多条件搜索需求订单  不写了
     @ApiOperation(value = "分页多条件搜索需求订单            没写")
     @GetMapping("/search/noods/Example")
-    public Result searchNooodsByExample(){
-        return new Result(true,StatusCode.OK,"没写");
+    public Result searchNooodsByExample() {
+        return new Result(true, StatusCode.OK, "没写");
     }
 
 }
