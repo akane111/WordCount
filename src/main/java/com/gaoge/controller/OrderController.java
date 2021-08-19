@@ -81,7 +81,7 @@ public class OrderController {
 
     //根据id查询订单
     @ApiOperation(value = "根据id查询订单")
-    @GetMapping("/{id}")
+    @GetMapping("/selectById/{id}")
     public Result<Order> selectById(@PathVariable("id") Integer id) {
         Order order = orderService.selectById(id);
         return new Result<Order>(true,StatusCode.OK,"查询成功",order);

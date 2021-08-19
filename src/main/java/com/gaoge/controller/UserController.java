@@ -10,6 +10,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +27,32 @@ import java.util.UUID;
 public class UserController {
     @Autowired
     private UserService userService;
+    //获取认证里面的用户信息,在每个方法里
+    //    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+
+    //用户登录之后，根据用户名展示个人信息
+    @ApiOperation(value = "用户登录之后，根据用户名展示个人信息")
+    @GetMapping("/loginSelectByUsername")
+    public Result<User> loginSelectByUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails principal = (UserDetails) authentication.getPrincipal();
+        String username = principal.getUsername();
+        User user = userService.selectByUserName(username);
+        return new Result<User>(true, StatusCode.OK, "查询成功", user);
+    }
+
+    //用户登录之后，根据用户名修改个人信息
+    @ApiOperation(value = "用户登录之后，根据用户名展示个人信息")
+    @PostMapping ("/loginUpdateByUsername")
+    public Result<User> loginUpdateByUsername(@RequestBody User user) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails principal = (UserDetails) authentication.getPrincipal();
+        String username = principal.getUsername();
+        user.setUserName(username);
+        userService.update(user);
+        return new Result<User>(true, StatusCode.OK, "修改成功");
+    }
 
     //查询所有用户
     @ApiOperation(value = "查询所有用户")
@@ -35,7 +64,7 @@ public class UserController {
 
     //增加用户
     @ApiOperation(value = "增加用户")
-    @PostMapping
+    @PostMapping("/add")
     public Result add(//@RequestParam(value = "file", required = false) MultipartFile file,
                       @RequestBody User user
     ) throws IOException {
@@ -61,7 +90,7 @@ public class UserController {
 //            file.transferTo(targetFile);
 //        }
         userService.add(user);
-        return new Result(true, StatusCode.OK, "添加成功");
+        return new Result(true, StatusCode.OK, "注册成功");
     }
 
     //修改用户
@@ -97,6 +126,7 @@ public class UserController {
         PageInfo<User> pageInfo = userService.findPage(pageNum, pageSize);
         return new Result<PageInfo>(true, StatusCode.OK, "分页查询成功", pageInfo);
     }
+
     //分页条件查询
     @ApiOperation("分页条件查询用户")
     @PostMapping("/search/{pageNum}/{pageSize}")
@@ -104,6 +134,6 @@ public class UserController {
                                      @PathVariable("pageNum") Integer pageNum,
                                      @PathVariable("pageSize") Integer pageSize) {
         PageInfo<User> pageInfo = userService.findPage(user, pageNum, pageSize);
-        return new Result<PageInfo>(true,StatusCode.OK,"查询成功",pageInfo);
+        return new Result<PageInfo>(true, StatusCode.OK, "查询成功", pageInfo);
     }
 }

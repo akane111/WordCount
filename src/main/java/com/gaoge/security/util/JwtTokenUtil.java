@@ -22,8 +22,8 @@ import java.util.Map;
 public class JwtTokenUtil {
     private String secret = "gaoge";
     // 过期时间 毫秒
-    private static final Long expiration = 1000000L;
-    private static final String header = "Authentication";
+    private static final Long expiration = 3600000L;
+    private static final String header = "Authorization";
 
     /**
      * 从数据声明生成令牌

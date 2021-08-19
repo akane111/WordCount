@@ -3,6 +3,7 @@ package com.gaoge.security.config;
 
 import com.gaoge.security.filter.CustomAuthenticationFilter;
 import com.gaoge.security.filter.JwtAuthenticationTokenFilter;
+import com.gaoge.security.filter.WebSecurityCorsFilter;
 import com.gaoge.security.handler.EntryPointUnauthorizedHandler;
 import com.gaoge.security.handler.MyAuthenticationFailureHandler;
 import com.gaoge.security.handler.MyAuthenticationSuccessHandler;
@@ -11,23 +12,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
+import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 
 /**
  * Spring Security 配置类
@@ -76,7 +83,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         /**
          * 在 UsernamePasswordAuthenticationFilter 之前添加 JwtAuthenticationTokenFilter
          */
-        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class)//实现json登录和表单登录，之前添加拦截器
+            .addFilterBefore(new WebSecurityCorsFilter(), ChannelProcessingFilter.class);//自定义拦截器解决跨域问题，在security过滤链之前拦截
+
 
         http.csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeRequests()
@@ -84,19 +93,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // 角色校验时，会自动拼接 "ROLE_"
 //                .antMatchers("/user/**").hasAnyRole("ADMIN","USER")
 //                .antMatchers("/non-auth/**").permitAll()
-                .antMatchers("/order/**").permitAll()
+                .antMatchers("/swagger-ui.html#/**","/swagger-ui.html/**","/**",
+                        "/user/add/**",
+                        "/order/goods/**","/order/needs/**","/order/selectById/**",
+                        "/knowledge/**").permitAll()
                 .anyRequest().authenticated()   // 任何请求,登录后可以访问
                 .and().addFilterAt(customAuthenticationFilter(),
                 UsernamePasswordAuthenticationFilter.class)
+                //.addFilter(corsFilter())
                 .formLogin().loginProcessingUrl("/user/login")
                 .successHandler(myAuthenticationSuccessHandler)
                 .failureHandler(myAuthenticationFailureHandler)
+                .and().logout()
                 .and().headers().cacheControl();
-        //用重写的Filter替换掉原有的UsernamePasswordAuthenticationFilter
-        //http
 
 
 
+//         打开运行报错，拦截链创建失败
 //        ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry = http.authorizeRequests();
 //        //让Spring security 放行所有preflight request（cors 预检请求）
 //        registry.requestMatchers(CorsUtils::isPreFlightRequest).permitAll();
@@ -104,18 +117,29 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.exceptionHandling().authenticationEntryPoint(entryPointUnauthorizedHandler).accessDeniedHandler(restAccessDeniedHandler);
     }
 
-    //打开报跨域问题
+//    没有解决跨域问题， 待理解
 //    @Bean
 //    public CorsFilter corsFilter(){
 //        UrlBasedCorsConfigurationSource configurationSource = new UrlBasedCorsConfigurationSource();
 //        CorsConfiguration cors = new CorsConfiguration();
 //        cors.setAllowCredentials(true);
-//        cors.addAllowedOrigin("*");
+//        cors.addAllowedOrigin("http://192.168.1.6:8081/");
 //        cors.addAllowedHeader("*");
 //        cors.addAllowedMethod("*");
 //        configurationSource.registerCorsConfiguration("/**", cors);
 //        return new CorsFilter(configurationSource);
 //    }
+//     没有解决跨域问题，待理解
+//    @Bean
+//    CorsConfigurationSource corsConfigurationSource() {
+//    CorsConfiguration configuration = new CorsConfiguration();
+//    configuration.setAllowedOrigins(Arrays.asList("http://192.168.1.6:8081/"));
+//    configuration.setAllowedMethods(Arrays.asList("GET","POST"));
+//    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//    source.registerCorsConfiguration("/**", configuration);
+//    return source;
+//}
+
     //注册自定义的UsernamePasswordAuthenticationFilter
     @Bean
     CustomAuthenticationFilter customAuthenticationFilter() throws Exception {
@@ -123,7 +147,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         filter.setAuthenticationSuccessHandler(myAuthenticationSuccessHandler);
         filter.setAuthenticationFailureHandler(myAuthenticationFailureHandler);
         filter.setFilterProcessesUrl("/user/login");
-
         //这句很关键，重用WebSecurityConfigurerAdapter配置的AuthenticationManager，不然要自己组装AuthenticationManager
         filter.setAuthenticationManager(authenticationManagerBean());
         return filter;

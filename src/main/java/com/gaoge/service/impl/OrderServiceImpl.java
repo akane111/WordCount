@@ -7,6 +7,8 @@ import com.gaoge.service.OrderService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
@@ -52,7 +54,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void add(Order order) {
-        order.setOwnName("gaoge");
+        //获取登陆的用户名
+        UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String name = principal.getUsername();
+        order.setOwnName(name);
         order.setCreateTime(new Date());
         order.setUpdateTime(new Date());
         orderDao.insertSelective(order);
@@ -72,7 +77,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> selectByType(String type) {
-        String name="gaoge";
+        //获取登陆的用户名
+        UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String name = principal.getUsername();
         Order order = new Order();
 //        order.setOwnName(name);
 //        order.setType(type);

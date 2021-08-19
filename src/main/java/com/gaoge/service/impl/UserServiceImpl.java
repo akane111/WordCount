@@ -40,6 +40,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void update(User user) {
+        String password = user.getPassword();
+        String encode = passwordEncoder.encode(password);
+        user.setPassword(encode);
+        user.setUpdateTime(new Date());
         userDao.updateByPrimaryKeySelective(user);
     }
 
