@@ -44,5 +44,5 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
             return super.attemptAuthentication(request, response);
         }
     }
-    
+
 }

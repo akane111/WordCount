@@ -19,4 +19,6 @@ public interface UserService {
     PageInfo<User> findPage(Integer pageNum, Integer pageSize);
 
     PageInfo<User> findPage(User user, Integer pageNum, Integer pageSize);
+
+    void loginUpdateByUsername(User user);
 }

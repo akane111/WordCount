@@ -5,10 +5,11 @@ import com.gaoge.common.StatusCode;
 import com.gaoge.entity.Knowledge;
 import com.gaoge.service.KnowledgeService;
 import com.github.pagehelper.PageInfo;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
+@Api(value = "知识")
 @RestController
 @RequestMapping("/knowledge")
 @CrossOrigin

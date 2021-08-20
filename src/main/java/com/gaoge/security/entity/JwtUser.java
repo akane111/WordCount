@@ -1,13 +1,15 @@
 package com.gaoge.security.entity;
 
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-
+@Data
 public class JwtUser implements UserDetails {
     private String username;
+    private String nickname;
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
 
@@ -15,6 +17,17 @@ public class JwtUser implements UserDetails {
         this.username = username;
         this.password = password;
         this.authorities = authorities;
+    }
+
+    public JwtUser(String username, String nickname, String password, Collection<? extends GrantedAuthority> authorities) {
+        this.username = username;
+        this.nickname = nickname;
+        this.password = password;
+        this.authorities = authorities;
+    }
+
+    public String getNickname() {
+        return nickname;
     }
 
     @Override

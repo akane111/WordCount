@@ -7,6 +7,7 @@ import com.gaoge.entity.Order;
 import com.gaoge.service.OrderService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.print.attribute.standard.MediaSize;
 import java.util.List;
-
+@Api(value = "订单")
 @RestController
 @RequestMapping("/order")
 @CrossOrigin

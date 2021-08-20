@@ -8,3 +8,6 @@ spring:
     password: root
   jackson:
     time-zone: GMT+8
+file:
+  location:
+    directory: E:\learn\nginx-1.21.1\images

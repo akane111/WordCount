@@ -1,6 +1,7 @@
 package com.gaoge.security.filter;
 
 import com.gaoge.security.util.JwtTokenUtil;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,11 +26,16 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
+    @SneakyThrows
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         String token = request.getHeader(jwtTokenUtil.getHeader());
         if (!StringUtils.isEmpty(token)) {
             String username = jwtTokenUtil.getUsernameFromToken(token);
+            //令牌失效，重新登陆
+            if (username==null){
+                throw new Exception("账号登录失效，请重新登录");
+            }
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 if (jwtTokenUtil.validateToken(token, userDetails)){

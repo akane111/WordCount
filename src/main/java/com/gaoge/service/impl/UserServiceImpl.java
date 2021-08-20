@@ -75,6 +75,12 @@ public class UserServiceImpl implements UserService {
         return pageInfo;
     }
 
+    @Override
+    public void loginUpdateByUsername(User user) {
+        user.setUpdateTime(new Date());
+        userDao.updateByPrimaryKeySelective(user);
+    }
+
     //创建example
     public Example createExample(User user) {
         Example example = new Example(User.class);

@@ -28,6 +28,6 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
 //        权限
 //        String permissions = "user,admin";
         String role = user.getRole();
-        return new JwtUser(user.getUserName(), user.getPassword(), AuthorityUtils.commaSeparatedStringToAuthorityList(role));
+        return new JwtUser(user.getUserName(),user.getNickName(), user.getPassword(), AuthorityUtils.commaSeparatedStringToAuthorityList(role));
     }
 }

@@ -22,7 +22,7 @@ import java.util.Map;
 public class JwtTokenUtil {
     private String secret = "gaoge";
     // 过期时间 毫秒
-    private static final Long expiration = 3600000L;
+    private static final Long expiration = 36000000L;
     private static final String header = "Authorization";
 
     /**
@@ -63,9 +63,11 @@ public class JwtTokenUtil {
      * @return 令牌
      */
     public String generateToken(UserDetails userDetails) {
+        JwtUser jwtUser= (JwtUser) userDetails;
         Map<String, Object> claims = new HashMap<>(2);
         claims.put(Claims.SUBJECT, userDetails.getUsername());
         claims.put(Claims.ISSUED_AT, new Date());
+        claims.put("nickname", jwtUser.getNickname());
         return generateToken(claims);
     }
 

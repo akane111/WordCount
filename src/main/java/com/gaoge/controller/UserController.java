@@ -2,6 +2,7 @@ package com.gaoge.controller;
 
 import com.gaoge.common.Result;
 import com.gaoge.common.StatusCode;
+import com.gaoge.entity.PasswordParam;
 import com.gaoge.entity.User;
 import com.gaoge.service.UserService;
 
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,12 +26,38 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/user")
 @CrossOrigin
+@Api(value = "用户")
 public class UserController {
     @Autowired
     private UserService userService;
-    //获取认证里面的用户信息,在每个方法里
-    //    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
+    //获取认证里面的用户信息,在每个方法里
+//  Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+    //用户登录之后，修改用户密码
+    @ApiOperation(value = "用户登录之后，修改用户密码")
+    @PostMapping("/loginUpdatePassword")
+    public Result<User> loginUpdatePassword(@RequestBody PasswordParam passwordParam) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails principal = (UserDetails) authentication.getPrincipal();
+        String username = principal.getUsername();
+        User user = userService.selectByUserName(username);
+        //数据库密码
+        String oldDataBasePassword = user.getPassword();
+        //传过来的老密码
+       String oldPassword = passwordParam.getOldPassword();
+//        String encode = passwordEncoder.encode(oldPassword);
+
+        if (!passwordEncoder.matches(oldPassword,oldDataBasePassword)){
+            return new Result<User>(false,StatusCode.ERROR,"原密码输入错误",null);
+        }
+        user.setUserName(username);
+        user.setPassword(passwordParam.getNewPassword());
+        userService.update(user);
+        return new Result<User>(true, StatusCode.OK, "修改成功");
+    }
 
     //用户登录之后，根据用户名展示个人信息
     @ApiOperation(value = "用户登录之后，根据用户名展示个人信息")
@@ -42,15 +70,15 @@ public class UserController {
         return new Result<User>(true, StatusCode.OK, "查询成功", user);
     }
 
-    //用户登录之后，根据用户名修改个人信息
-    @ApiOperation(value = "用户登录之后，根据用户名展示个人信息")
-    @PostMapping ("/loginUpdateByUsername")
+    //用户登录之后，根据用户名修改个人基本信息
+    @ApiOperation(value = "用户登录之后，根据用户名修改个人基本信息")
+    @PostMapping("/loginUpdateByUsername")
     public Result<User> loginUpdateByUsername(@RequestBody User user) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails principal = (UserDetails) authentication.getPrincipal();
         String username = principal.getUsername();
         user.setUserName(username);
-        userService.update(user);
+        userService.loginUpdateByUsername(user);
         return new Result<User>(true, StatusCode.OK, "修改成功");
     }
 
