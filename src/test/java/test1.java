@@ -30,7 +30,7 @@ public class test1 {
     }
     @Test
     public void test5(){
-        String token="eyJhbGciOiJIUzUxMiJ9.eyJuaWNrbmFtZSI6Imdhb2dlIiwic3ViIjoiZ2FvZ2UiLCJleHAiOjE2MjkzNTk1NTIsImlhdCI6MTYyOTM1NTk1MjgzMH0.EEe2d9D5s-HYa6Q_EVii1-1QJtGwOlAHUp1u6mPpGaJ2Ylug3ADRwjnTZVh3wtrZrFc4QEBEfeIXC6LYA1hSTA";
+        String token="eyJhbGciOiJIUzUxMiJ9.eyJuaWNrbmFtZSI6Imdhb2dlZ2UiLCJzdWIiOiJnYW9nZSIsImF2YXRhciI6ImZhZTc1NWU0MmJiODQwNmE5MDdhODlhNTUxNjNkN2U4LmpwZyIsInJvbGUiOlt7ImF1dGhvcml0eSI6InVzZXIifSx7ImF1dGhvcml0eSI6ImV4cGVydCJ9LHsiYXV0aG9yaXR5IjoiYWRtaW4ifV0sImV4cCI6MTYyOTcyNDUzMiwiaWF0IjoxNjI5Njg4NTMyNDAyfQ.iHLBCHKSWBHfClLiENlhMhZzAJgaVaeKCQUBJv4NW3jERbJ01pqEr_CuD66c49WHJGxkxXcs4LoWr9EpGJrtEg";
         Claims gaoge = Jwts.parser().setSigningKey("gaoge").parseClaimsJws(token).getBody();
         System.out.println(gaoge);
     }

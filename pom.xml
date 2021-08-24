@@ -64,12 +64,16 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.76</version>
         </dependency>
-<!--        这个有问题得用springboot-->
-<!--        <dependency>-->
-<!--            <groupId>com.github.pagehelper</groupId>-->
-<!--            <artifactId>pagehelper</artifactId>-->
-<!--            <version>5.1.2</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <!--        这个有问题得用springboot-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.github.pagehelper</groupId>-->
+        <!--            <artifactId>pagehelper</artifactId>-->
+        <!--            <version>5.1.2</version>-->
+        <!--        </dependency>-->
 
     </dependencies>
 

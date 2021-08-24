@@ -68,6 +68,8 @@ public class JwtTokenUtil {
         claims.put(Claims.SUBJECT, userDetails.getUsername());
         claims.put(Claims.ISSUED_AT, new Date());
         claims.put("nickname", jwtUser.getNickname());
+        claims.put("avatar", jwtUser.getAvatar());
+        claims.put("role",jwtUser.getAuthorities());
         return generateToken(claims);
     }
 

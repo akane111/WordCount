@@ -11,6 +11,7 @@ public class JwtUser implements UserDetails {
     private String username;
     private String nickname;
     private String password;
+    private String avatar;
     private Collection<? extends GrantedAuthority> authorities;
 
     public JwtUser(String username, String password, Collection<? extends GrantedAuthority> authorities) {
@@ -24,6 +25,18 @@ public class JwtUser implements UserDetails {
         this.nickname = nickname;
         this.password = password;
         this.authorities = authorities;
+    }
+
+    public JwtUser(String username, String nickname, String password, String avatar, Collection<? extends GrantedAuthority> authorities) {
+        this.username = username;
+        this.nickname = nickname;
+        this.password = password;
+        this.avatar = avatar;
+        this.authorities = authorities;
+    }
+
+    public String getAvatar() {
+        return avatar;
     }
 
     public String getNickname() {
