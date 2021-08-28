@@ -12,11 +12,10 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
 /**
- * 权限校验处理器
- * @author K. L. Mao
- * @create 2019/1/11
+ * @author 高歌
+ * @Description 权限校验处理器
+ * @Date 2021-08-24
  */
 @Component
 public class RestAccessDeniedHandler implements AccessDeniedHandler {

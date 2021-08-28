@@ -7,6 +7,7 @@ import com.gaoge.service.OrderService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
 
     //每页显示多条数据
-    private static final Integer pageSize = 6;
+    private  Integer pageSize = 6;
 
     @Autowired
     private OrderDao orderDao;
@@ -35,6 +36,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = new Order();
         order.setType("goods");
         Example example = createExample(order);
+        pageSize=6;
         PageHelper.startPage(pageNum, pageSize);
         List<Order> goods = orderDao.selectByExample(example);
         PageInfo<Order> orderPageInfo = new PageInfo<>(goods);
@@ -46,6 +48,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = new Order();
         order.setType("needs");
         Example example = createExample(order);
+        pageSize=8;
         PageHelper.startPage(pageNum,pageSize);
         List<Order> orders = orderDao.selectByExample(example);
         PageInfo<Order> orderPageInfo = new PageInfo<>(orders);
@@ -95,6 +98,32 @@ public class OrderServiceImpl implements OrderService {
     public Order selectById(Integer id) {
         Order order = orderDao.selectByPrimaryKey(id);
         return order;
+    }
+
+    @Override
+    public List<Order> selectBuyByUserName() {
+        //获取登陆的用户名
+        UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String name = principal.getUsername();
+        Example example = new Example(Order.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("cooperationName",name);
+        criteria.andEqualTo("orderStatu",1);
+        List<Order> orders = orderDao.selectByExample(example);
+        return orders;
+    }
+
+    @Override
+    public List<Order> selectSellByUserName() {
+        //获取登陆的用户名
+        UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String name = principal.getUsername();
+        Example example = new Example(Order.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("ownName",name);
+        criteria.andEqualTo("orderStatu",1);
+        List<Order> orders = orderDao.selectByExample(example);
+        return orders;
     }
 
     //创建example

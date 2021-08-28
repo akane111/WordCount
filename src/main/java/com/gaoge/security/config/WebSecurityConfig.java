@@ -96,7 +96,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/swagger-ui.html#/**","/swagger-ui.html/**","/**",
                         "/user/add/**",
                         "/order/goods/**","/order/needs/**","/order/selectById/**",
-                        "/knowledge/**").permitAll()
+                        "/knowledge/**",
+                        "/paySuccessful/**").permitAll()
                 .anyRequest().authenticated()   // 任何请求,登录后可以访问
                 .and().addFilterAt(customAuthenticationFilter(),
                 UsernamePasswordAuthenticationFilter.class)

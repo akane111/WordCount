@@ -14,8 +14,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-@Api(value = "知识")
+/**
+ * @author 高歌
+ * @Description 知识模块
+ * @Date 2021-08-24
+ */
+@Api(tags = "知识模块接口")
 @RestController
 @RequestMapping("/knowledge")
 @CrossOrigin

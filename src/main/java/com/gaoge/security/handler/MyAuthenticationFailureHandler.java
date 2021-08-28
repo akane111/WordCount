@@ -12,11 +12,10 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
 /**
- * 登录失败操作
- * @author K. L. Mao
- * @create 2019/1/15
+ * @author 高歌
+ * @Description 登录失败操作
+ * @Date 2021-08-24
  */
 @Component
 public class MyAuthenticationFailureHandler implements AuthenticationFailureHandler {

@@ -21,4 +21,8 @@ public interface OrderService {
     List<Order> selectByType(String type);
 
     Order selectById(Integer id);
+
+    List<Order> selectBuyByUserName();
+
+    List<Order> selectSellByUserName();
 }

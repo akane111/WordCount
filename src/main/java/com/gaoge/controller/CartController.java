@@ -4,7 +4,9 @@ import com.gaoge.common.Result;
 import com.gaoge.common.StatusCode;
 import com.gaoge.entity.Order;
 import com.gaoge.service.OrderService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.tomcat.util.buf.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
@@ -15,16 +17,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 /**
- * 购物车
+ * @author 高歌
+ * @Description 购物车
+ * @Date 2021-08-24
  */
 @RestController
 @RequestMapping("/cart")
+@Api(tags = "购物车接口")
 public class CartController {
     @Autowired
     private RedisTemplate redisTemplate;
@@ -40,7 +46,7 @@ public class CartController {
         String name = principal.getUsername();
 //        redisTemplate.boundListOps(name).leftPush(id);
 //        redisTemplate.boundHashOps(name).put(id,id);
-        redisTemplate.boundZSetOps(name).add(id,100);
+        redisTemplate.boundZSetOps(name).add(id, 100);
         return new Result(true, StatusCode.OK, "添加商品到购物车成功");
     }
 
@@ -69,28 +75,44 @@ public class CartController {
 //        List<Integer> list = redisTemplate.boundListOps(name).range(0, size);
         Long size = redisTemplate.boundZSetOps(name).size();
         Set<Integer> range = redisTemplate.boundZSetOps(name).range(0, size);
-       ArrayList<Order> orders = new ArrayList<>();
+        ArrayList<Order> orders = new ArrayList<>();
 //        LinkedHashSet<Integer> integers = new LinkedHashSet<>();
-
+        BigDecimal totalMoney = new BigDecimal("0.00");
         for (Integer id : range) {
             Order order = orderService.selectById(id);
+            if (order == null) {
+                System.out.println("这个" + id + "商品已被删除,跳过展示");
+                continue;
+            }
             orders.add(order);
+            totalMoney = totalMoney.add(new BigDecimal(order.getPrice()));
         }
-        return new Result<List<Order>>(true, StatusCode.OK, "查询成功", orders);
+        String totalMoneyStr = totalMoney.toString();
+        return new Result<List<Order>>(true, StatusCode.OK, totalMoneyStr, orders);
     }
-
-    //提交订单
-    @ApiOperation("提交订单")
-    @GetMapping("/commitOrder")
-    public Result<Integer> commitOrder() {
-        //获取登陆的用户名
-        UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String name = principal.getUsername();
-        ArrayList<Integer> integers = new ArrayList<>();
-        for (int i = 0; i < redisTemplate.boundListOps(name).size(); i++) {
-            Integer id = (Integer) redisTemplate.boundListOps(name).leftPop();
-            integers.add(id);
-        }
-        return new Result(true, StatusCode.OK, "提交成功", integers);
-    }
+/**
+ * 暂时没在这实现
+ */
+//    //提交订单
+//    @ApiOperation("提交订单")
+//    @GetMapping("/commitOrder")
+//    public Result<Integer> commitOrder() {
+//        //获取登陆的用户名
+//        UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        String name = principal.getUsername();
+//        ArrayList<Integer> integers = new ArrayList<>();
+//        for (int i = 0; i < redisTemplate.boundZSetOps(name).size(); i++) {
+//            //一个个获取redis里的数据
+//            Set<Integer> range = redisTemplate.boundZSetOps(name).range(i, i + 1);
+//            for (Integer id : range) {
+//                Order order = orderService.selectById(id);
+//                order.setCooperationName(name);
+//                order.setOrderStatu(1);
+//                orderService.update(order,order.getOrderId());
+//                integers.add(id);
+//            }
+//        }
+//        redisTemplate.boundZSetOps(name).remove(0,redisTemplate.boundZSetOps(name).size());
+//        return new Result(true, StatusCode.OK, "提交成功", integers);
+//    }
 }

@@ -1,7 +1,10 @@
 package com.gaoge.service.impl;
 
+import com.gaoge.dao.AddressDao;
 import com.gaoge.dao.UserDao;
+import com.gaoge.entity.Address;
 import com.gaoge.entity.User;
+import com.gaoge.service.AddressService;
 import com.gaoge.service.UserService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -22,6 +25,8 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
     @Resource
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private AddressDao addressDao;
 
     @Override
     public List<User> selectAll() {
@@ -30,6 +35,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void add(User user) {
+//        加个默认地址
+        String userName = user.getUserName();
+        Address address = new Address();
+        address.setOwn_name(userName);
+//        address.setId(1);
+        address.setIs_default(1);
+        address.setConsignee("请输入收货人姓名...");
+        address.setPhone("请输入收货人手机号...");
+        address.setAddress_detail("请输入收货人详细地址信息...");
+        addressDao.insertSelective(address);
         String password = user.getPassword();
         String encodePassword = passwordEncoder.encode(password);
         user.setPassword(encodePassword);
@@ -41,8 +56,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void update(User user) {
         String password = user.getPassword();
-        String encode = passwordEncoder.encode(password);
-        user.setPassword(encode);
+        if (password!=null){
+            String encode = passwordEncoder.encode(password);
+            user.setPassword(encode);
+        }
         user.setUpdateTime(new Date());
         userDao.updateByPrimaryKeySelective(user);
     }

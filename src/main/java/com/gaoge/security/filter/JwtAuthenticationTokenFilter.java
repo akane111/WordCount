@@ -1,5 +1,9 @@
 package com.gaoge.security.filter;
 
+import com.alibaba.fastjson.JSON;
+import com.gaoge.common.Result;
+import com.gaoge.common.StatusCode;
+import com.gaoge.exception.InvalidateTokenException;
 import com.gaoge.security.util.JwtTokenUtil;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +19,15 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import javax.annotation.Resource;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-//请求拦截器
+/**
+ * @author 高歌
+ * @Description 请求拦截器，根据传过来的token，进行认证
+ * @Date 2021-08-24
+ */
 @Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Resource
@@ -32,9 +41,19 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         String token = request.getHeader(jwtTokenUtil.getHeader());
         if (!StringUtils.isEmpty(token)) {
             String username = jwtTokenUtil.getUsernameFromToken(token);
-            //令牌失效，重新登陆
-            if (username==null){
-                throw new Exception("账号登录失效，请重新登录");
+            try {
+                //令牌失效，重新登陆
+                if (username==null){
+                    ServletOutputStream outputStream = response.getOutputStream();
+                    String loginInvalidate = JSON.toJSONString(new Result<String>(false, StatusCode.ERROR, "账号登录失效，请重新登录", "账号登录失效，请重新登录"));
+                    outputStream.write(loginInvalidate.getBytes());
+                    outputStream.flush();
+                    outputStream.close();
+//                throw new InvalidateTokenException("账号登录失效，请重新登录");
+                    response.setStatus(HttpServletResponse.SC_OK);
+                }
+            }catch (Exception e){
+                System.out.println(e.getMessage());
             }
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);

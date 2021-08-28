@@ -11,6 +11,17 @@ spring:
   redis:
     host: localhost
     port: 6379
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+#nginx存放图片的路径
 file:
   location:
     directory: E:\learn\nginx-1.21.1\images
+# 支付宝 appId,私钥，支付宝公钥
+alipay:
+  info:
+    appId: 支付宝appid
+    privateKey:  私钥
+    alipayPublicKey: 支付宝公钥
