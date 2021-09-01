@@ -47,6 +47,8 @@ public class AddressServiceImpl implements AddressService {
         criteria.andEqualTo("own_name", name);
         criteria.andEqualTo("is_default", 1);
         Address address = addressDao.selectOneByExample(example);
+        Boolean is_default = address.getIs_default();
+//        System.out.println(is_default);
         return address;
     }
 
@@ -57,16 +59,16 @@ public class AddressServiceImpl implements AddressService {
         String name = principal.getUsername();
 //        Integer id = address.getId();
         address.setOwn_name(name);
-        if (address.getIs_default().equals(1)) {
-            Integer is_default = address.getIs_default();
-            if (is_default.equals(1)) {
+        if (address.getIs_default()) {
+            Boolean is_default = address.getIs_default();
+            if (is_default) {
 //          将别的默认路径清除
                 setZero();
             }
             update(address);
         }else {
-            Integer is_default = address.getIs_default();
-            if (is_default.equals(1)) {
+            Boolean is_default = address.getIs_default();
+            if (is_default) {
 //          将别的默认路径清除
                 setZero();
             }
@@ -87,7 +89,7 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public boolean delete(Integer id) {
         Address address = addressDao.selectByPrimaryKey(id);
-        if (address.getIs_default().equals(1)){
+        if (address.getIs_default()){
             return false;
         }else {
             addressDao.deleteByPrimaryKey(id);
@@ -101,7 +103,7 @@ public class AddressServiceImpl implements AddressService {
     public void setZero() {
         List<Address> addresses = selectByOwnName();
         for (Address address : addresses) {
-            address.setIs_default(0);
+            address.setIs_default(false);
             update(address);
         }
     }

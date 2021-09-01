@@ -83,7 +83,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         /**
          * 在 UsernamePasswordAuthenticationFilter 之前添加 JwtAuthenticationTokenFilter
          */
-        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class)//实现json登录和表单登录，之前添加拦截器
+        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class)//用登录之后的认证信息，再次访问时可以直接访问了，UsernamePasswordAuthenticationFilter之前添加拦截器
             .addFilterBefore(new WebSecurityCorsFilter(), ChannelProcessingFilter.class);//自定义拦截器解决跨域问题，在security过滤链之前拦截
 
 
@@ -99,7 +99,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/knowledge/**",
                         "/paySuccessful/**").permitAll()
                 .anyRequest().authenticated()   // 任何请求,登录后可以访问
-                .and().addFilterAt(customAuthenticationFilter(),
+                .and().addFilterAt(customAuthenticationFilter(),//JSON登陆实现，在 UsernamePasswordAuthenticationFilter，之前添加JSON格式
                 UsernamePasswordAuthenticationFilter.class)
                 //.addFilter(corsFilter())
                 .formLogin().loginProcessingUrl("/user/login")

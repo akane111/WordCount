@@ -3,6 +3,7 @@ package com.gaoge.controller;
 import com.gaoge.common.Result;
 import com.gaoge.common.StatusCode;
 import com.gaoge.dao.OrderDao;
+import com.gaoge.dao.UserDao;
 import com.gaoge.entity.Address;
 import com.gaoge.entity.Order;
 import com.gaoge.entity.PasswordParam;
@@ -56,6 +57,8 @@ public class UserController {
     private JwtTokenUtil jwtTokenUtil;
     @Autowired
     private JwtUserDetailsServiceImpl jwtUserDetailsService;
+    @Autowired
+    private UserDao userDao;
 
     //获取认证里面的用户信息,在每个方法里
 //  Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -153,6 +156,11 @@ public class UserController {
             System.out.println(stringBuffer);
             String errorInfo = stringBuffer.toString();
             return new Result<String>(false, StatusCode.ERROR, "注册失败", errorInfo);
+        }
+        String userName = user.getUserName();
+        User user1 = userDao.selectByPrimaryKey(userName);
+        if (user1!=null){
+            return new Result<String>(false, StatusCode.ERROR, "注册失败", "用户名已被注册，请重新输入");
         }
         userService.add(user);
         return new Result(true, StatusCode.OK, "注册成功");

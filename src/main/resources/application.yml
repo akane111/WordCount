@@ -22,6 +22,6 @@ file:
 # 支付宝 appId,私钥，支付宝公钥
 alipay:
   info:
-    appId: 支付宝appid
-    privateKey:  私钥
-    alipayPublicKey: 支付宝公钥
+    appId:
+    privateKey:
+    alipayPublicKey:

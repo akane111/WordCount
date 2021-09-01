@@ -81,7 +81,6 @@ public class AlipayController {
                 privateKey,  //私钥 不知道是什么 往上面看 配置沙箱密钥的时候 自己保存的
                 "json", "utf-8",
                 alipayPublicKey, "RSA2");
-
         //订单号  自定义
         String out_trade_no = UUID.randomUUID().toString().replace("-", "");
         out_trade_no = URLDecoder.decode(out_trade_no, "UTF-8");
@@ -98,8 +97,6 @@ public class AlipayController {
         alipayRequest.setReturnUrl("http://3958b99l28.zicp.vip/paySuccessful");
         //异步通知
         alipayRequest.setNotifyUrl("支付成功去接口处理东西【必须外网能访问】");
-
-
         //配置参数
         alipayRequest.setBizContent("{" +
                 "    \"out_trade_no\":\"" + out_trade_no + "\"," +

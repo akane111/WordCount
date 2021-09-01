@@ -4,9 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.math.BigDecimal;
-import java.util.Base64;
-import java.util.Date;
-import java.util.Properties;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.*;
 
 public class test1 {
     @Test
@@ -85,6 +85,52 @@ public class test1 {
         BigDecimal add = bigDecimal.add(bigDecimal1);
         System.out.println(d3);
         System.out.println(add);
+    }
+    @Test
+    public void test10() throws NoSuchAlgorithmException {
+        try {
+            byte[] md5s = MessageDigest.getInstance("md5").digest("gaoge".getBytes("utf-8"));
+            String s = new String(md5s);
+            System.out.println(s);
+        }catch (Exception e){
+            e.getMessage();
+        }
+    }
+    @Test
+    public void test11()  {
+        ArrayList<Integer> integers = new ArrayList<>();
+        Integer[] gaoge = new Integer[]{};
+        integers.add(1);
+        integers.add(2);
+        integers.add(3);
+        for (Integer integer:integers){
+            System.out.println(integer);
+        }
+        Iterator<Integer> iterator = integers.iterator();
+        if (iterator.hasNext()){
+            Integer next = iterator.next();
+            iterator.remove();
+        }
+        while (iterator.hasNext()){
+            System.out.println( iterator.next());
+//            iterator.remove();
+        }
+
+
+        Integer[] integers1 = integers.toArray(gaoge);
+        List<Integer> list1 = Arrays.asList(integers1);
+//        list1.add(9);
+        for (Integer integer:list1){
+            System.out.println(list1);
+        }
+        for (Integer integer:integers1){
+            System.out.println(integer);
+        }
+        List<Integer> list = integers.subList(0, 3);
+        for (Integer integer:list){
+            System.out.println(list);
+        }
+
     }
 
 }

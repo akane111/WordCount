@@ -29,5 +29,5 @@ public class Address {
     @NotBlank(message = "地址不能为空")
     @Length(min = 2,max = 40,message = "地址长度在2-40之间")
     private String address_detail;
-    private Integer is_default;
+    private Boolean is_default;
 }

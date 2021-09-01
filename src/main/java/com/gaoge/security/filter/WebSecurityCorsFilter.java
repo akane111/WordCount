@@ -15,7 +15,6 @@ public class WebSecurityCorsFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
     }
-
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException, IOException {
         HttpServletResponse res = (HttpServletResponse) response;
@@ -31,7 +30,6 @@ public class WebSecurityCorsFilter implements Filter {
         }
         chain.doFilter(request, res);
     }
-
     @Override
     public void destroy() {
     }

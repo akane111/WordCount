@@ -34,7 +34,7 @@ public class User {
     private String phone;
     @Pattern(regexp = "^\\d{15}|\\d{18}$",message = "请输入15或18位有效身份证号")
     private String identityNum;
-    @Length(min = 2,max = 30)
+    @Length(min = 2,max = 30,message = "请输入的地址长度在2-30之间")
     private String address;
     @Pattern(regexp = "^(user|user,expert|user,expert,admin)$",message = "设置角色请输入 user 或 user,expert 或 user,expert,admin 等角色")
     private String role;
@@ -43,5 +43,4 @@ public class User {
     private int integral;
     private int credit;
     private String avatar;
-
 }

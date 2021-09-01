@@ -21,11 +21,9 @@ import java.io.InputStream;
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-
         //attempt Authentication when Content-Type is json
         if(request.getContentType().equals(MediaType.APPLICATION_JSON_UTF8_VALUE)
                 ||request.getContentType().equals(MediaType.APPLICATION_JSON_VALUE)){
-
             //use jackson to deserialize json
             ObjectMapper mapper = new ObjectMapper();
             UsernamePasswordAuthenticationToken authRequest = null;
@@ -42,11 +40,9 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 return this.getAuthenticationManager().authenticate(authRequest);
             }
         }
-
         //transmit it to UsernamePasswordAuthenticationFilter
         else {
             return super.attemptAuthentication(request, response);
         }
     }
-
 }

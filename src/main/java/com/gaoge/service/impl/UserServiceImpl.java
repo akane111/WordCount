@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
         Address address = new Address();
         address.setOwn_name(userName);
 //        address.setId(1);
-        address.setIs_default(1);
+        address.setIs_default(true);
         address.setConsignee("请输入收货人姓名...");
         address.setPhone("请输入收货人手机号...");
         address.setAddress_detail("请输入收货人详细地址信息...");

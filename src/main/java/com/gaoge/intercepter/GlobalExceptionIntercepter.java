@@ -1,9 +1,12 @@
 package com.gaoge.intercepter;
 
+import com.alipay.api.AlipayApiException;
 import com.gaoge.common.Result;
 import com.gaoge.common.StatusCode;
 import com.gaoge.exception.FileFormatException;
 import com.gaoge.exception.InvalidateTokenException;
+
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -36,14 +39,19 @@ public class GlobalExceptionIntercepter {
     @ExceptionHandler(ClassCastException.class)
     public Result<String> classCastException(){
         System.out.println("类转换异常，这个项目多半发生在请求头的token问题");
-        return new Result<String>(false, StatusCode.ERROR,"类转换异常，这个项目多半发生在请求头的token问题","类转换异常，这个项目多半发生在请求头的token问题");
+        return new Result<String>(false, StatusCode.ERROR,"请您先登录","请您先登录");
     }
-//    //账号登陆失效，异常拦截不到，还是会报错
-//    @ExceptionHandler(InvalidateTokenException.class)
-//    public Result<String> InvalidateTokenException(){
+    //账号登陆失效，异常拦截不到，还是会报错
+    @ExceptionHandler(InvalidateTokenException.class)
+    public Result<String> InvalidateTokenException(){
+        return new Result<String>(false, StatusCode.ERROR,"账号登陆失效，请重新登录","账号登陆失效，请重新登录");
+    }
+    //
+//    @ExceptionHandler(AccessDeniedException.class)
+//    public Result<String> accessDeniedException(){
 //        return new Result<String>(false, StatusCode.ERROR,"账号登陆失效，请重新登录","账号登陆失效，请重新登录");
 //    }
-    //全部异常，
+//    全部异常，
     @ExceptionHandler(Exception.class)
     public Result<String> DAException(){
         return new Result<String>(false, StatusCode.ERROR,"有异常待解决，具体异常待看控制台","有异常待解决，具体异常待看控制台");
