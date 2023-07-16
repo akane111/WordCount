@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.gaoge</groupId>
-    <artifactId>RongXiaoTong-GaoGe</artifactId>
+    <groupId>com.qst.crop</groupId>
+    <artifactId>RongXiaoTong</artifactId>
     <version>1.0-SNAPSHOT</version>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -84,8 +84,17 @@
         <!--            <artifactId>pagehelper</artifactId>-->
         <!--            <version>5.1.2</version>-->
         <!--        </dependency>-->
-
     </dependencies>
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <executable>true</executable>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

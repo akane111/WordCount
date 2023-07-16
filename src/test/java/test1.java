@@ -1,14 +1,35 @@
+import com.qst.crop.dao.UserDao;
+import com.qst.crop.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class test1 {
+    @Autowired
+    UserDao userDao;
+    @Test
+    public void test111() throws ParseException {
+        Calendar c = Calendar.getInstance();
+
+        String s = ""+c.get(Calendar.YEAR)+c.get(Calendar.MONTH)+c.get(Calendar.DAY_OF_MONTH)+c.get(Calendar.HOUR_OF_DAY)+
+                c.get(Calendar.MINUTE)+c.get(Calendar.SECOND)+c.getTimeInMillis();
+        System.out.println(c.get(Calendar.YEAR)+c.get(Calendar.MONTH)+c.get(Calendar.DAY_OF_MONTH)+c.get(Calendar.HOUR_OF_DAY)+
+                c.get(Calendar.MINUTE)+c.get(Calendar.SECOND));
+        System.out.println(s);
+        System.out.println(c.get(Calendar.DAY_OF_MONTH));
+    }
+
+
+
     @Test
     public void test2() {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
@@ -52,7 +73,7 @@ public class test1 {
         String gaoge = "gaoge";
         String gaoge1 = "gaoge1";
         String gaoge2 = "gaogeg";
-        String gaoge3 = "高歌";
+        String gaoge3 = "QST";
         int length1 = gaoge.length();
         System.out.println(length1);
 
@@ -130,7 +151,30 @@ public class test1 {
         for (Integer integer:list){
             System.out.println(list);
         }
-
+    }
+    @Test
+    public void test12(){
+        byte[] encode = Base64.getEncoder().encode("MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhF4i9xDs9vCzu38vxniMeNL+S4mtMC1PSf/hnpQc2Wlp2wr3QC2dL+B954N5vwiFDNTlQiQFkWODdFA+9EuKkVpUjuSnMxTqa9dvtYS80hHQ2rw98a5sUYQm1myqcHPaKPeFow92d7n8TKK9185qk9b7IDdb7poX98Fv23M4+8+vlnDX7V1C/CBH0wllUu0l5grlcQ6IB8eWLWKIN9F3II2CbzAaHPMDtGiow2DldeBxx7hO+Gg7E1cNN7aIASKUVrJI2ZWShduIviZPKbsyP8FwoNMD6NAjsfDs6Hcvo476EOnrbQWJoB371pKHB3v96HfRZmN6qETuTc/v+nCAQQIDAQAB".getBytes());
+        String s = new String(encode);
+        System.out.println(s);
+//        byte[] decode = Base64.getDecoder().decode(s);
+//        String s1 = new String(decode);
+//        System.out.println(s1);
+    }
+    @Test
+    public void test13(){
+        User user = new User();
+        user.setUserName("root");
+        user.setPassword("root123");
+        user.setNickName("ROOT");
+        user.setPhone("15610529080");
+        user.setIdentityNum("111111111111111");
+        user.setAddress("2222222222");
+        user.setRole("user");
+        user.setCreateTime(new Date());
+        user.setUpdateTime(new Date());
+        int i = userDao.insertSelective(user);
+        System.out.println(i);
     }
 
 }
