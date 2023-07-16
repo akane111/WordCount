@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h> 
+
+void Count(char * file); 
+int Zicount=0;
+int Wordcount=0;
+int Hangcount=0;
+
+void Count(char * file)
+{
+    FILE * fp;
+    char a;
+    if((fp=fopen(file,"r"))==NULL)
+    {
+        printf("读文件失败！\n");
+        exit(-1);
+    }
+    while(!feof(fp))
+    {
+        a=fgetc(fp);
+
+        if(a!=' '&&a!='\n'&&a!='\t'&&a!=','&&a!='.'&&a!='!'&&a!=';'&&a!='=')
+            Zicount++;
+        if(a==' '||a=='\n'||a=='\t'||a==','||a=='.'||a=='!'||a=='='||a==';')
+        {
+            if(a=='=')                   //解决==      
+                Wordcount--;
+            Wordcount++;
+        }
+    }
+    Zicount--;          //at end of the file,Zicount will add 
+    fclose(fp);
+}
+
+
+int main(int argc, char* argv[])               //argv[1]保存指令，argv[2]保存文件路径
+{
+    FILE *fp;
+    Count(argv[2]);
+    while(1)
+    {
+        if((fp=fopen(argv[2],"r"))==NULL)
+        {    
+        printf("该文件不存在！\n\n\n");
+        scanf("%s%s%s",argv[0],argv[1],argv[2]);
+        continue;
+        }
+        else if(strcmp(argv[1],"-c")==0)                   //统计文件字符数
+            printf("文件%s字符数为:%d\n",argv[2],Zicount);
+        else if(strcmp(argv[1],"-w")==0)                   //统计文件单词数
+            printf("文件%s单词数为:%d\n",argv[2],Wordcount);
+        else if(strcmp(argv[1],"exit")==0)
+        {
+            printf("程序结束!\n");
+            break;
+        }
+        else 
+            printf("该指令不存在，请重新输入\n");
+        printf("\n\n");
+        scanf("%s%s%s",argv[0],argv[1],argv[2]);
+    }
+    return 0;
+}
+
+
